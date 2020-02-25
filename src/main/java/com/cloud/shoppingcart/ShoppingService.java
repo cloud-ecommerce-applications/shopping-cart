@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloud.shoppingcart.product.ProductService;
@@ -21,6 +22,12 @@ public class ShoppingService {
     private final ProductService productService;
     
     private final ShoppingCartRepository shoppingCartRepository;
+
+    @Autowired
+    public ShoppingService(ProductService productService, ShoppingCartRepository shoppingCartRepository) {
+        this.productService = productService;
+        this.shoppingCartRepository = shoppingCartRepository;
+    }
 
     public Set<ShoppingCart> getAll(){
         return shoppingCartRepository.findAll();

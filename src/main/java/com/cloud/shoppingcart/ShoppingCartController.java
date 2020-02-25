@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,11 @@ public class ShoppingCartController {
 
     private final ProductService productService;
 
+    @Autowired
+    public ShoppingCartController(ShoppingService service, ProductService productService) {
+        this.service = service;
+        this.productService = productService;
+    }
 
     @GetMapping("/")
     public String home(){
