@@ -1,9 +1,12 @@
-package com.cloud.shoppingcart;
+package com.cloud.shoppingcart.cart.service;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.cloud.shoppingcart.cart.model.CartItemEntity;
+import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
+import com.cloud.shoppingcart.cart.repository.ShoppingCartRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +32,12 @@ public class ShoppingService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
-    public Set<ShoppingCart> getAll(){
+    public Set<ShoppingCartEntity> getAll(){
         return shoppingCartRepository.findAll();
     }
-    public Optional<ShoppingCart> forUser(String user){
+    public Optional<ShoppingCartEntity> forUser(String user){
         logger.info("ShoppingService.Controller.cartForUser"+user);
-        Optional<ShoppingCart> cart= shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(user)).findFirst();
+        Optional<ShoppingCartEntity> cart= shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(user)).findFirst();
         cart.ifPresent(c ->{
             c.getItems().stream().forEach( i->{
                 i.setUnitCost(productService.getUnitCost(i.getSku()));
@@ -42,14 +45,14 @@ public class ShoppingService {
         });
         return cart;
     }
-    public Set<CartItem> addToCart(String userName, CartItem item){
+    public Set<CartItemEntity> addToCart(String userName, CartItemEntity item){
     	return shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(userName))
                 .findFirst().map(c -> {
                         item.setId(c.getItems().size());
                          c.getItems().add(item);
                       return c.getItems();
 
-        }).orElse(new HashSet<CartItem>());
+        }).orElse(new HashSet<CartItemEntity>());
 
     }
 }

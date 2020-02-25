@@ -1,8 +1,12 @@
-package com.cloud.shoppingcart;
+package com.cloud.shoppingcart.cart.controller;
 
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.cloud.shoppingcart.cart.dto.ShoppingCartDTO;
+import com.cloud.shoppingcart.cart.service.ShoppingService;
+import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +38,9 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/carts")
-    public Set<ShoppingCart> allCarts(){
-        return service.getAll();
+    public Set<ShoppingCartDTO> allCarts(){
+        return service.getAll().stream()
+                .map(ShoppingCartEntity::toDto).collect(Collectors.toSet());
     }
 
 

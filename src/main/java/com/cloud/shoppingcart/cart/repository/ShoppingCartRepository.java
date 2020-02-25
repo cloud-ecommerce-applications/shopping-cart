@@ -1,22 +1,23 @@
-package com.cloud.shoppingcart;
+package com.cloud.shoppingcart.cart.repository;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.boot.web.servlet.ServletComponentScan;
+import com.cloud.shoppingcart.cart.model.CartItemEntity;
+import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ShoppingCartRepository {
 	
-	 private static Set<ShoppingCart> carts= new HashSet<ShoppingCart>();
+	 private static Set<ShoppingCartEntity> carts= new HashSet<ShoppingCartEntity>();
 	    static {
-	        Set<CartItem> user1Items = new HashSet<>();
-	        Set<CartItem> user2Items = new HashSet<>();
-	        ShoppingCart user1Cart = new ShoppingCart();
-	        ShoppingCart user2Cart = new ShoppingCart();
+	        Set<CartItemEntity> user1Items = new HashSet<>();
+	        Set<CartItemEntity> user2Items = new HashSet<>();
+	        ShoppingCartEntity user1Cart = new ShoppingCartEntity();
+	        ShoppingCartEntity user2Cart = new ShoppingCartEntity();
 	        for(int i=1; i<=5;i++){
-	            CartItem item = new CartItem();
+	            CartItemEntity item = new CartItemEntity();
 	            item.setId(1);
 	            item.setSku("sku"+i);
 	            //Get unit cost from product service
@@ -33,7 +34,7 @@ public class ShoppingCartRepository {
 	        carts.add(user2Cart);
 	    }
 	
-	public Set<ShoppingCart> findAll(){
+	public Set<ShoppingCartEntity> findAll(){
 		return carts;
 	}
 

@@ -1,6 +1,8 @@
-package com.cloud.shoppingcart;
+package com.cloud.shoppingcart.cart.dto;
 
-public class CartItem {
+import com.cloud.shoppingcart.cart.model.CartItemEntity;
+
+public class CartItemDTO {
      private int id;
      private String sku;
      private int qty;
@@ -36,5 +38,14 @@ public class CartItem {
 
     public void setUnitCost(double unitCost) {
         this.unitCost = unitCost;
+    }
+
+    public CartItemEntity toEntity(){
+        CartItemEntity entity = new CartItemEntity();
+        entity.setId(this.getId());
+        entity.setQty(this.getQty());
+        entity.setSku(this.getSku());
+        entity.setUnitCost(this.getUnitCost());
+        return entity;
     }
 }

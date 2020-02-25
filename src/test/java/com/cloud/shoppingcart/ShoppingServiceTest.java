@@ -1,5 +1,9 @@
 package com.cloud.shoppingcart;
 
+import com.cloud.shoppingcart.cart.model.CartItemEntity;
+import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
+import com.cloud.shoppingcart.cart.repository.ShoppingCartRepository;
+import com.cloud.shoppingcart.cart.service.ShoppingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +27,7 @@ public class ShoppingServiceTest {
 	ProductService productService;
 	
 	@Mock
-	ShoppingCartRepository shoppingCartRepository;
+    ShoppingCartRepository shoppingCartRepository;
 	
 	ShoppingService shoppingService;
 	
@@ -41,20 +45,20 @@ public class ShoppingServiceTest {
 	  @Test
 	  void addToCartSavesTheData() {
 	    when(shoppingCartRepository.findAll()).thenReturn(cart());
-	    CartItem item = new CartItem();
+	    CartItemEntity item = new CartItemEntity();
         item.setId(10);
         item.setSku("sku3");
         assertTrue(shoppingService.addToCart("user1", item).size()==6);
 	  }
 	  
-	  private Set<ShoppingCart> cart(){
-		  Set<ShoppingCart> carts= new HashSet<ShoppingCart>();
-		   Set<CartItem> user1Items = new HashSet<>();
-	        Set<CartItem> user2Items = new HashSet<>();
-	        ShoppingCart user1Cart = new ShoppingCart();
-	        ShoppingCart user2Cart = new ShoppingCart();
+	  private Set<ShoppingCartEntity> cart(){
+		  Set<ShoppingCartEntity> carts= new HashSet<ShoppingCartEntity>();
+		   Set<CartItemEntity> user1Items = new HashSet<>();
+	        Set<CartItemEntity> user2Items = new HashSet<>();
+	        ShoppingCartEntity user1Cart = new ShoppingCartEntity();
+	        ShoppingCartEntity user2Cart = new ShoppingCartEntity();
 	        for(int i=1; i<=5;i++){
-	            CartItem item = new CartItem();
+	            CartItemEntity item = new CartItemEntity();
 	            item.setId(1);
 	            item.setSku("sku"+i);
 	            //Get unit cost from product service

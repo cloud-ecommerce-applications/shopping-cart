@@ -1,5 +1,7 @@
 package com.cloud.shoppingcart;
 
+import com.cloud.shoppingcart.cart.controller.ShoppingCartController;
+import com.cloud.shoppingcart.cart.service.ShoppingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
