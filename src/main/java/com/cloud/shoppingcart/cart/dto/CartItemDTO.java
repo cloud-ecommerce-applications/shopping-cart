@@ -2,6 +2,8 @@ package com.cloud.shoppingcart.cart.dto;
 
 import com.cloud.shoppingcart.cart.model.CartItemEntity;
 
+import java.util.Objects;
+
 public class CartItemDTO {
      private int id;
      private String sku;
@@ -47,5 +49,21 @@ public class CartItemDTO {
         entity.setSku(this.getSku());
         entity.setUnitCost(this.getUnitCost());
         return entity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CartItemDTO)) return false;
+        CartItemDTO that = (CartItemDTO) o;
+        return getId() == that.getId() &&
+                getQty() == that.getQty() &&
+                Double.compare(that.getUnitCost(), getUnitCost()) == 0 &&
+                Objects.equals(getSku(), that.getSku());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSku(), getQty(), getUnitCost());
     }
 }

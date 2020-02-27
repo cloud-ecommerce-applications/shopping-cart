@@ -10,7 +10,10 @@ import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloud.shoppingcart.product.ProductService;
@@ -19,28 +22,27 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/shopping")
 public class ShoppingCartController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ShoppingService service;
 
-    private final ProductService productService;
 
     @Autowired
-    public ShoppingCartController(ShoppingService service, ProductService productService) {
+    public ShoppingCartController(ShoppingService service) {
         this.service = service;
-        this.productService = productService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public String home(){
         return "shopping home";
     }
 
     @GetMapping("/carts")
-    public Set<ShoppingCartDTO> allCarts(){
-        return service.getAll().stream()
-                .map(ShoppingCartEntity::toDto).collect(Collectors.toSet());
+    public ResponseEntity<Set<ShoppingCartDTO>> allCarts(){
+        return ResponseEntity.ok(service.getAll().stream()
+                .map(ShoppingCartEntity::toDto).collect(Collectors.toSet()));
     }
 
 

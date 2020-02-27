@@ -16,6 +16,8 @@ import com.cloud.shoppingcart.product.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.swing.text.html.Option;
+
 @Service
 @RequiredArgsConstructor
 public class ShoppingService {
@@ -35,9 +37,9 @@ public class ShoppingService {
     public Set<ShoppingCartEntity> getAll(){
         return shoppingCartRepository.findAll();
     }
-    public Optional<ShoppingCartEntity> forUser(String user){
-        logger.info("ShoppingService.Controller.cartForUser"+user);
-        Optional<ShoppingCartEntity> cart= shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(user)).findFirst();
+    public Optional<ShoppingCartEntity> getCart(String userName){
+        logger.info("ShoppingService.Controller.cartForUser"+userName);
+        Optional<ShoppingCartEntity> cart= shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(userName)).findFirst();
         cart.ifPresent(c ->{
             c.getItems().stream().forEach( i->{
                 i.setUnitCost(productService.getUnitCost(i.getSku()));
@@ -45,14 +47,14 @@ public class ShoppingService {
         });
         return cart;
     }
-    public Set<CartItemEntity> addToCart(String userName, CartItemEntity item){
+    public Optional<ShoppingCartEntity> addToCart(String userName, CartItemEntity item){
     	return shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(userName))
                 .findFirst().map(c -> {
                         item.setId(c.getItems().size());
                          c.getItems().add(item);
-                      return c.getItems();
+                    return c;
 
-        }).orElse(new HashSet<CartItemEntity>());
+        });
 
     }
 }
