@@ -1,8 +1,10 @@
 package com.cloud.shoppingcart.cart.controller;
 
+import com.cloud.shoppingcart.cart.dto.ShoppingCartDTO;
 import com.cloud.shoppingcart.cart.model.CartItemEntity;
 import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
 import com.cloud.shoppingcart.cart.service.ShoppingService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,6 +41,9 @@ public class ShoppingCartControllerWebMvcTest {
 
     @MockBean
     private ShoppingService service;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     MockMvc mockMvc;
@@ -69,6 +76,16 @@ public class ShoppingCartControllerWebMvcTest {
                 .accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(request).andReturn();
         assertEquals("shopping home", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void allCartsTest() throws Exception {
+        when(service.getAll()).thenReturn(carts);
+        RequestBuilder request = MockMvcRequestBuilders.get("/shopping/carts")
+                .accept(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(request).andReturn();
+        String response= result.getResponse().getContentAsString();
+        assertEquals(response, objectMapper.writeValueAsString(carts));
     }
 
 
