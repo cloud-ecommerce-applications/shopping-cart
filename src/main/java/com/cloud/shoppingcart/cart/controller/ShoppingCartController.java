@@ -3,6 +3,7 @@ package com.cloud.shoppingcart.cart.controller;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.cloud.shoppingcart.cart.dto.ShoppingCartDTO;
 import com.cloud.shoppingcart.cart.service.ShoppingService;
@@ -22,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/shopping")
 public class ShoppingCartController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -41,7 +41,7 @@ public class ShoppingCartController {
 
     @GetMapping("/carts")
     public ResponseEntity<Set<ShoppingCartDTO>> allCarts(){
-        return ResponseEntity.ok(service.getAll().stream()
+        return ResponseEntity.ok(StreamSupport.stream(service.getAll().spliterator(), false)
                 .map(ShoppingCartEntity::toDto).collect(Collectors.toSet()));
     }
 

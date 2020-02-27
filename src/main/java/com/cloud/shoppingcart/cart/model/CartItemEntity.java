@@ -1,20 +1,38 @@
 package com.cloud.shoppingcart.cart.model;
 
 import com.cloud.shoppingcart.cart.dto.CartItemDTO;
+import com.sun.javafx.beans.IDProperty;
 
+import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
+@Entity
+@Table(name = "CART_ITEM")
 public class CartItemEntity {
-     private int id;
+
+     @Id
+     private UUID id;
+
+     @Column
      private String sku;
+
+     @Column
      private int qty;
+
+     @Column(name="UNIT_COST")
      private double unitCost;
 
-    public int getId() {
+    @ManyToOne
+    @JoinColumn(name="cartId", nullable=false)
+    private ShoppingCartEntity cart;
+
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -42,10 +60,19 @@ public class CartItemEntity {
         this.unitCost = unitCost;
     }
 
+    public ShoppingCartEntity getCart() {
+        return cart;
+    }
+
+    public void setCart(ShoppingCartEntity cart) {
+        this.cart = cart;
+    }
+
     public CartItemDTO toDto(){
         CartItemDTO dto = new CartItemDTO();
         dto.setUnitCost(this.getUnitCost());
         dto.setId(this.getId());
+        dto.setCartId(this.getCart().getCartId());
         dto.setQty(this.getQty());
         dto.setSku(this.getSku());
         return dto;

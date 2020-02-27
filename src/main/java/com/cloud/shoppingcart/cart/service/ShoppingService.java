@@ -1,8 +1,7 @@
 package com.cloud.shoppingcart.cart.service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 import com.cloud.shoppingcart.cart.model.CartItemEntity;
 import com.cloud.shoppingcart.cart.model.ShoppingCartEntity;
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Service;
 import com.cloud.shoppingcart.product.ProductService;
 
 import lombok.RequiredArgsConstructor;
-
-import javax.swing.text.html.Option;
 
 @Service
 @RequiredArgsConstructor
@@ -34,26 +31,19 @@ public class ShoppingService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
-    public Set<ShoppingCartEntity> getAll(){
+    public Iterable<ShoppingCartEntity> getAll(){
         return shoppingCartRepository.findAll();
     }
-    public Optional<ShoppingCartEntity> getCart(String userName){
-        logger.info("ShoppingService.Controller.cartForUser"+userName);
-        Optional<ShoppingCartEntity> cart= shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(userName)).findFirst();
-        cart.ifPresent(c ->{
-            c.getItems().stream().forEach( i->{
-                i.setUnitCost(productService.getUnitCost(i.getSku()));
-            });
-        });
-        return cart;
-    }
-    public Optional<ShoppingCartEntity> addToCart(String userName, CartItemEntity item){
-    	return shoppingCartRepository.findAll().stream().filter(c -> c.getCustomerId().equalsIgnoreCase(userName))
-                .findFirst().map(c -> {
-                        item.setId(c.getItems().size());
-                         c.getItems().add(item);
-                    return c;
+    public Optional<ShoppingCartEntity> getCart(String customerId){
+        logger.info("ShoppingService.Controller.cartForUser"+customerId);
+        return shoppingCartRepository.findByCustomerId(customerId);
 
+    }
+    public Optional<ShoppingCartEntity> addToCart(String customerId, CartItemEntity item){
+        return shoppingCartRepository.findByCustomerId(customerId).map(c ->{
+            item.setId(UUID.randomUUID());
+            c.getItems().add(item);
+            return c;
         });
 
     }

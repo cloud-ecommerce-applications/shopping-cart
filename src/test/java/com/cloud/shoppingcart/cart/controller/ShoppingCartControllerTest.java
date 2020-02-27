@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,10 +39,11 @@ public class ShoppingCartControllerTest {
         carts = new HashSet<ShoppingCartEntity>();
         Set< CartItemEntity > items = new HashSet<>();
         ShoppingCartEntity cart = new ShoppingCartEntity();
+        cart.setCartId(UUID.randomUUID());
         cart.setCustomerId("1");
         for (int i = 1; i <= 5; i++) {
             CartItemEntity item = new CartItemEntity();
-            item.setId(1);
+            item.setId(UUID.randomUUID());
             item.setSku("sku" + i);
             item.setUnitCost(10);
             items.add(item);

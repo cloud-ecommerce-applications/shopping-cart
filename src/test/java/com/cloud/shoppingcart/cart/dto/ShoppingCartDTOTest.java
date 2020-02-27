@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class ShoppingCartDTOTest {
 
@@ -17,9 +18,10 @@ public class ShoppingCartDTOTest {
     public void test_dto_entity_conversion() {
         Set<CartItemEntity> items = new HashSet<>();
         ShoppingCartEntity cart = new ShoppingCartEntity();
+        cart.setCartId(UUID.randomUUID());
         for (int i = 1; i <= 5; i++) {
             CartItemEntity item = new CartItemEntity();
-            item.setId(1);
+            item.setId(UUID.randomUUID());
             item.setSku("sku" + i);
             item.setUnitCost(10);
             items.add(item);

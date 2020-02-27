@@ -1,14 +1,35 @@
 package com.cloud.shoppingcart.cart.model;
 
 import com.cloud.shoppingcart.cart.dto.ShoppingCartDTO;
+import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Entity
+@Table(name = "SHOPPING_CART")
 public class ShoppingCartEntity {
+
+    @Id
+    @Column(name="CART_ID")
+    private UUID cartId ;
+
+    @Column(name="CUSTOMER_ID")
     private String customerId;
+
+    @OneToMany(mappedBy="cart", cascade= CascadeType.ALL, fetch=FetchType.EAGER)
     private Set<CartItemEntity> items;
+
+    public UUID getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(UUID cartId) {
+        this.cartId = cartId;
+    }
 
     public String getCustomerId() {
         return customerId;
@@ -29,6 +50,7 @@ public class ShoppingCartEntity {
     public ShoppingCartDTO toDto(){
         ShoppingCartDTO dto = new ShoppingCartDTO();
         dto.setCustomerId(this.getCustomerId());
+        dto.setCartId(this.getCartId());
         dto.setItems(this.getItems().stream().map(CartItemEntity::toDto).collect(Collectors.toSet()));
         return dto;
     }
