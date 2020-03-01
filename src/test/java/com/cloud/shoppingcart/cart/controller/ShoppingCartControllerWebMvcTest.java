@@ -65,6 +65,7 @@ public class ShoppingCartControllerWebMvcTest {
             item.setId(UUID.randomUUID());
             item.setSku("sku" + i);
             item.setUnitCost(10);
+            item.setCart(cart);
             items.add(item);
 
         }
@@ -74,20 +75,21 @@ public class ShoppingCartControllerWebMvcTest {
 
     @Test
     public void homeTest() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.get("/shopping/")
+        RequestBuilder request = MockMvcRequestBuilders.get("/")
                 .accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(request).andReturn();
+        System.out.println(result.getResponse());
         assertEquals("shopping home", result.getResponse().getContentAsString());
     }
 
     @Test
     public void allCartsTest() throws Exception {
         when(service.getAll()).thenReturn(carts);
-        RequestBuilder request = MockMvcRequestBuilders.get("/shopping/carts")
+        RequestBuilder request = MockMvcRequestBuilders.get("/carts")
                 .accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(request).andReturn();
         String response= result.getResponse().getContentAsString();
-        assertEquals(response, objectMapper.writeValueAsString(carts));
+        assertEquals(objectMapper.writeValueAsString(carts.stream().map(ShoppingCartEntity::toDto).collect(Collectors.toSet())), response);
     }
 
 

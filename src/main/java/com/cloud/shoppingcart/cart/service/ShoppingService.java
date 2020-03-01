@@ -42,6 +42,7 @@ public class ShoppingService {
     public Optional<ShoppingCartEntity> addToCart(String customerId, CartItemEntity item){
         return shoppingCartRepository.findByCustomerId(customerId).map(c ->{
             item.setId(UUID.randomUUID());
+            item.setCart(c);
             c.getItems().add(item);
             return c;
         });

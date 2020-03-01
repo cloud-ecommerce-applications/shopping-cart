@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShoppingServiceTest {
@@ -49,6 +49,7 @@ public class ShoppingServiceTest {
             item.setId(UUID.randomUUID());
             item.setSku("sku" + i);
             item.setUnitCost(10);
+            item.setCart(cart);
             items.add(item);
 
         }
@@ -57,32 +58,34 @@ public class ShoppingServiceTest {
     }
 
     @Test
-    public void getAllTest(){
+    public void given_cart_when_find_then_cart_is_present(){
         when(shoppingCartRepository.findAll()).thenReturn(carts);
-        assertFalse(service.getAll().isEmpty());
+        assertTrue(service.getAll().iterator().hasNext());
     }
     @Test
-    public void getCartTest(){
+    public void given_cart_when_user_then_cart(){
         String userName = "1";
-        when(shoppingCartRepository.findAll()).thenReturn(carts);
-        when(productService.getUnitCost(any())).thenReturn((double) 10);
+        when(shoppingCartRepository.findByCustomerId(any())).thenReturn(carts.stream().findFirst());
         assertTrue(service.getCart(userName).isPresent());
 
     }
     @Test
-    public void addToCartTest(){
+    public void given_cart_when_add_item_then_item_isAdded(){
         String userName = "1";
         CartItemEntity item = new CartItemEntity();
         item.setSku("sku10");
         item.setUnitCost(10);
+        int size_before_add = carts.stream().findFirst()
+                .map(ShoppingCartEntity::getItems).orElse(new HashSet<>()).size();
 
-
-        when(shoppingCartRepository.findAll()).thenReturn(carts);
-        when(productService.getUnitCost(any())).thenReturn((double) 10);
+        //Given when cart
+        when(shoppingCartRepository.findByCustomerId(any())).thenReturn(carts.stream().findFirst());
+        //when add item
         Optional<ShoppingCartEntity> cart = service.addToCart(userName, item);
+
+        //then item added
         assertTrue(cart.isPresent());
-        cart.ifPresent( c-> {
-            assertFalse(c.getItems().size() == carts.size()+1);
-        });
+        assertTrue(cart.get().getItems().size()==size_before_add+1 );
+
     }
 }

@@ -46,6 +46,7 @@ public class ShoppingCartControllerTest {
             item.setId(UUID.randomUUID());
             item.setSku("sku" + i);
             item.setUnitCost(10);
+            item.setCart(cart);
             items.add(item);
 
         }
